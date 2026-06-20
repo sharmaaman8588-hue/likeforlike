@@ -1,0 +1,36 @@
+# Comparable-store (like-for-like) policy.
+#
+# Every store-week is given exactly one non_comp_reason, or "comp". Reasons are decided in the
+# order listed under `precedence`; the first rule that applies wins.
+
+version: 1
+
+# A week-53 year shifts the calendar by a week. With restatement on, TY week w is compared with
+# LY week w+1 in the year after a 53-week year, so the same calendar days are compared.
+restatement:
+  enabled: true
+
+# A store's first N trading weeks are opening ramp. A store-week is excluded when either its TY
+# week or its comparable LY week falls inside that window.
+ramp:
+  enabled: true
+  trading_weeks: 12
+
+# A store-week is non-comp if the store was closed on any day of it, or of its comparable LY week.
+refurbishment:
+  enabled: true
+
+# A permanent closure is always non-comp from the first week the store no longer trades.
+
+# A relocation is a new store id: the old id closes (closed_store) and the new id opens
+# (new_store) and then runs through the same ramp window as any other opening.
+relocation:
+  treat_as: new_store_id
+
+precedence:
+  - no_prior_year   # the first fiscal year in the data has no LY to compare with
+  - extra_week      # TY week with no LY partner (week 53)
+  - refurbishment   # closed on any day of the TY week or its comparable LY week
+  - closed_store    # TY sales are zero: the store has closed for good
+  - new_store       # no LY sales, or LY/TY week inside the opening ramp window
+  - comp
