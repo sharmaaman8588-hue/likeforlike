@@ -1,0 +1,112 @@
+{
+  "config": "{\"version\":\"5.55\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU10\",\"version\":\"5.55\",\"type\":2}}}",
+  "layoutOptimization": 0,
+  "resourcePackages": [],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "LFL by fiscal month",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "LflByMonth",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"lfl_year\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":220,\"height\":120}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"FiscalCalendar.fiscal_year\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"f0\",\"Entity\":\"FiscalCalendar\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"f0\"}},\"Property\":\"fiscal_year\"},\"Name\":\"FiscalCalendar.fiscal_year\"}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Fiscal year'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 120,
+          "width": 220,
+          "x": 24,
+          "y": 24,
+          "z": 0
+        },
+        {
+          "config": "{\"name\":\"lfl_card\",\"layouts\":[{\"id\":0,\"position\":{\"x\":264,\"y\":24,\"z\":0,\"width\":240,\"height\":120}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"StoreWeek.LFL %\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s0\",\"Entity\":\"StoreWeek\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s0\"}},\"Property\":\"LFL %\"},\"Name\":\"StoreWeek.LFL %\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 120,
+          "width": 240,
+          "x": 264,
+          "y": 24,
+          "z": 0
+        },
+        {
+          "config": "{\"name\":\"lfl_month\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":168,\"z\":0,\"width\":1232,\"height\":528}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"FiscalCalendar.month_name\"}],\"Y\":[{\"queryRef\":\"StoreWeek.LFL %\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"f0\",\"Entity\":\"FiscalCalendar\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"StoreWeek\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"f0\"}},\"Property\":\"month_name\"},\"Name\":\"FiscalCalendar.month_name\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"LFL %\"},\"Name\":\"StoreWeek.LFL %\"}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'LFL % by fiscal month'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 528,
+          "width": 1232,
+          "x": 24,
+          "y": 168,
+          "z": 0
+        }
+      ],
+      "width": 1280
+    },
+    {
+      "config": "{}",
+      "displayName": "Growth bridge",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "GrowthBridge",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"bridge_year\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":220,\"height\":120}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"FiscalCalendar.fiscal_year\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"f0\",\"Entity\":\"FiscalCalendar\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"f0\"}},\"Property\":\"fiscal_year\"},\"Name\":\"FiscalCalendar.fiscal_year\"}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Fiscal year'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 120,
+          "width": 220,
+          "x": 24,
+          "y": 24,
+          "z": 0
+        },
+        {
+          "config": "{\"name\":\"bridge_card\",\"layouts\":[{\"id\":0,\"position\":{\"x\":264,\"y\":24,\"z\":0,\"width\":240,\"height\":120}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"GrowthBridge.Total Growth %\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g0\",\"Entity\":\"GrowthBridge\",\"Type\":0}],\"Select\":[{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g0\"}},\"Property\":\"Total Growth %\"},\"Name\":\"GrowthBridge.Total Growth %\"}]},\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 120,
+          "width": 240,
+          "x": 264,
+          "y": 24,
+          "z": 0
+        },
+        {
+          "config": "{\"name\":\"bridge_waterfall\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":168,\"z\":0,\"width\":1232,\"height\":528}}],\"singleVisual\":{\"visualType\":\"waterfallChart\",\"projections\":{\"Category\":[{\"queryRef\":\"GrowthBridge.bucket\"}],\"Y\":[{\"queryRef\":\"GrowthBridge.Bridge pp\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"g0\",\"Entity\":\"GrowthBridge\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g0\"}},\"Property\":\"bucket\"},\"Name\":\"GrowthBridge.bucket\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g0\"}},\"Property\":\"Bridge pp\"},\"Name\":\"GrowthBridge.Bridge pp\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"g0\"}},\"Property\":\"bucket_order\"}}}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Growth bridge, points of last year's sales'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 528,
+          "width": 1232,
+          "x": 24,
+          "y": 168,
+          "z": 0
+        }
+      ],
+      "width": 1280
+    },
+    {
+      "config": "{}",
+      "displayName": "Store comp status",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720,
+      "name": "StoreCompStatus",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"status_year\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":24,\"z\":0,\"width\":220,\"height\":120}}],\"singleVisual\":{\"visualType\":\"slicer\",\"projections\":{\"Values\":[{\"queryRef\":\"FiscalCalendar.fiscal_year\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"f0\",\"Entity\":\"FiscalCalendar\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"f0\"}},\"Property\":\"fiscal_year\"},\"Name\":\"FiscalCalendar.fiscal_year\"}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Fiscal year'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 120,
+          "width": 220,
+          "x": 24,
+          "y": 24,
+          "z": 0
+        },
+        {
+          "config": "{\"name\":\"status_table\",\"layouts\":[{\"id\":0,\"position\":{\"x\":24,\"y\":168,\"z\":0,\"width\":1232,\"height\":528}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"Store.store_id\"},{\"queryRef\":\"Store.store_name\"},{\"queryRef\":\"StoreWeek.non_comp_reason\"},{\"queryRef\":\"StoreWeek.Sales\"},{\"queryRef\":\"StoreWeek.Sales LY Comparable\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s0\",\"Entity\":\"Store\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"StoreWeek\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s0\"}},\"Property\":\"store_id\"},\"Name\":\"Store.store_id\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s0\"}},\"Property\":\"store_name\"},\"Name\":\"Store.store_name\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"non_comp_reason\"},\"Name\":\"StoreWeek.non_comp_reason\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Sales\"},\"Name\":\"StoreWeek.Sales\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Sales LY Comparable\"},\"Name\":\"StoreWeek.Sales LY Comparable\"}]},\"drillFilterOtherVisuals\":true,\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Sales by store and comp status'\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 528,
+          "width": 1232,
+          "x": 24,
+          "y": 168,
+          "z": 0
+        }
+      ],
+      "width": 1280
+    }
+  ]
+}
