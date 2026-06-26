@@ -1,0 +1,15 @@
+relationship d4769ea0-1037-5f9b-b8ae-1d5e69a64823
+	fromColumn: StoreWeek.store_id
+	toColumn: Store.store_id
+
+relationship ffdec7c6-d593-535a-a623-d66fc1925a4f
+	fromColumn: StoreWeek.week_key
+	toColumn: FiscalCalendar.week_key
+
+relationship 8983f99f-7436-52a7-bc84-c690c0db1a40
+	fromColumn: GrowthBridge.store_id
+	toColumn: Store.store_id
+
+relationship 112566c6-618e-53d1-8153-1957e513d77a
+	fromColumn: GrowthBridge.ty_week_key
+	toColumn: FiscalCalendar.week_key
