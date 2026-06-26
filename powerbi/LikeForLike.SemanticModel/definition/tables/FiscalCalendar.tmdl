@@ -1,0 +1,90 @@
+table FiscalCalendar
+	lineageTag: 0bce9294-402d-5b4c-85b8-951ad1c8d528
+
+	column week_key
+		dataType: int64
+		lineageTag: b162e380-228e-5af0-a083-8038b92b9960
+		summarizeBy: none
+		sourceColumn: week_key
+
+	column fiscal_year
+		dataType: int64
+		lineageTag: abfe3ff6-285d-56ee-83d1-d674a85c5df2
+		summarizeBy: none
+		sourceColumn: fiscal_year
+
+	column fiscal_week
+		dataType: int64
+		lineageTag: 0537f870-0aa1-545a-8167-0763fcef64c7
+		summarizeBy: none
+		sourceColumn: fiscal_week
+
+	column fiscal_quarter
+		dataType: int64
+		lineageTag: a4e92374-2b47-55a1-bd97-614bf9d3233c
+		summarizeBy: none
+		sourceColumn: fiscal_quarter
+
+	column fiscal_month
+		dataType: int64
+		lineageTag: 3e2399e4-a3e9-5208-88e4-864e43926114
+		summarizeBy: none
+		sourceColumn: fiscal_month
+
+	column month_name
+		dataType: string
+		lineageTag: 5e9d9d3d-6682-55aa-9562-3d910e265c20
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: fiscal_month
+
+	column week_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 18cc4fbb-0ad7-5e5e-9ca9-1ac5de8000e1
+		summarizeBy: none
+		sourceColumn: week_start
+
+	column week_end
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 72e41a96-9005-5ca9-be2f-317bc84802b0
+		summarizeBy: none
+		sourceColumn: week_end
+
+	column is_week_53
+		dataType: int64
+		lineageTag: b8598c81-d9f5-5b41-a1ef-cc7ae7630f88
+		summarizeBy: none
+		sourceColumn: is_week_53
+
+	column ly_week_key
+		dataType: int64
+		lineageTag: 0dd77502-8289-56d2-a423-a244f5d68782
+		summarizeBy: none
+		sourceColumn: ly_week_key
+
+	column ly_match
+		dataType: string
+		lineageTag: ee7f5293-e2ea-521c-a1e2-d7c5e375b3b7
+		summarizeBy: none
+		sourceColumn: ly_match
+
+	column is_unmatched_ly
+		dataType: int64
+		lineageTag: ae343260-9b61-5c24-86e8-e8f95040b341
+		summarizeBy: none
+		sourceColumn: is_unmatched_ly
+
+	partition FiscalCalendar = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(
+						File.Contents(DataFolder & "\FiscalCalendar.csv"),
+						[Delimiter = ",", Columns = 12, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"week_key", Int64.Type}, {"fiscal_year", Int64.Type}, {"fiscal_week", Int64.Type}, {"fiscal_quarter", Int64.Type}, {"fiscal_month", Int64.Type}, {"month_name", type text}, {"week_start", type date}, {"week_end", type date}, {"is_week_53", Int64.Type}, {"ly_week_key", Int64.Type}, {"ly_match", type text}, {"is_unmatched_ly", Int64.Type}})
+				in
+					Typed

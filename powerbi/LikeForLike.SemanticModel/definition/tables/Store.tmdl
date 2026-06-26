@@ -1,0 +1,65 @@
+table Store
+	lineageTag: f20c9f6a-c709-5355-acb5-af305ac29cbc
+
+	column store_id
+		dataType: string
+		lineageTag: 543994d9-03d7-527d-9543-7ff08e72d81a
+		summarizeBy: none
+		sourceColumn: store_id
+
+	column store_name
+		dataType: string
+		lineageTag: dc91c4c5-d4a7-55a9-a17c-c5170ae44de2
+		summarizeBy: none
+		sourceColumn: store_name
+
+	column region
+		dataType: string
+		lineageTag: 663dc2d2-9518-5132-b300-571cd8c1a105
+		summarizeBy: none
+		sourceColumn: region
+
+	column format
+		dataType: string
+		lineageTag: 1976417f-b065-55c7-b700-94d03124ff2c
+		summarizeBy: none
+		sourceColumn: format
+
+	column size_sqm
+		dataType: int64
+		lineageTag: c0aad2c5-46a5-5d46-adb0-5a7865ea6090
+		summarizeBy: none
+		sourceColumn: size_sqm
+
+	column open_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 5306db27-75e9-5add-b755-e6d32897d73c
+		summarizeBy: none
+		sourceColumn: open_date
+
+	column close_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: ad8977f3-9af7-5f94-9de8-8263c73afe50
+		summarizeBy: none
+		sourceColumn: close_date
+
+	column relocated_from
+		dataType: string
+		lineageTag: 75207362-89bc-5051-819f-31245ce11bf1
+		summarizeBy: none
+		sourceColumn: relocated_from
+
+	partition Store = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(
+						File.Contents(DataFolder & "\Store.csv"),
+						[Delimiter = ",", Columns = 8, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"store_id", type text}, {"store_name", type text}, {"region", type text}, {"format", type text}, {"size_sqm", Int64.Type}, {"open_date", type date}, {"close_date", type date}, {"relocated_from", type text}})
+				in
+					Typed

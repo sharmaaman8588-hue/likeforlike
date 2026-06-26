@@ -1,0 +1,84 @@
+table StoreWeek
+	lineageTag: 8e44cabc-73ab-5b54-945e-c6c5d83a8610
+
+	/// Sales this year, all store-weeks.
+	measure Sales = SUM('StoreWeek'[sales_ty])
+		formatString: #,0
+		lineageTag: 6c92ba7f-6de4-5e37-b5ac-cddff3787ebb
+
+	/// Sales in each store-week's comparable last-year week.
+	measure 'Sales LY Comparable' = SUM('StoreWeek'[sales_ly_comparable])
+		formatString: #,0
+		lineageTag: dd644d67-ff6b-5bbb-90a1-e44e337d5836
+
+	/// This-year sales of comp store-weeks.
+	measure 'Comp Sales TY' = CALCULATE(SUM('StoreWeek'[sales_ty]), 'StoreWeek'[is_comp] = 1)
+		formatString: #,0
+		lineageTag: 8276579c-4eeb-54d8-9868-6319c999eb58
+
+	/// Comparable last-year sales of comp store-weeks.
+	measure 'Comp Sales LY' = CALCULATE(SUM('StoreWeek'[sales_ly_comparable]), 'StoreWeek'[is_comp] = 1)
+		formatString: #,0
+		lineageTag: 0ff5e90d-002c-5642-8a09-518187728dd5
+
+	/// Like-for-like sales growth.
+	measure 'LFL %' = DIVIDE([Comp Sales TY] - [Comp Sales LY], [Comp Sales LY])
+		formatString: 0.00%
+		lineageTag: 8d514729-6fd4-584d-874d-822c69ff358f
+
+	column store_id
+		dataType: string
+		lineageTag: f7d54a91-79e7-57d7-8793-de9764a394f7
+		summarizeBy: none
+		sourceColumn: store_id
+
+	column week_key
+		dataType: int64
+		lineageTag: 5a95c479-07ad-53ae-96ff-136015565d71
+		summarizeBy: none
+		sourceColumn: week_key
+
+	column sales_ty
+		dataType: int64
+		formatString: #,0
+		lineageTag: 300d8762-8945-5331-94e5-ffeeb9467eb9
+		summarizeBy: sum
+		sourceColumn: sales_ty
+
+	column ly_week_key
+		dataType: int64
+		lineageTag: 8babf5cb-0917-5934-bb1f-1e7c34bd3039
+		summarizeBy: none
+		sourceColumn: ly_week_key
+
+	column sales_ly_comparable
+		dataType: int64
+		formatString: #,0
+		lineageTag: d94f77bf-9b09-5718-a14b-48dcdc176052
+		summarizeBy: sum
+		sourceColumn: sales_ly_comparable
+
+	column is_comp
+		dataType: int64
+		lineageTag: 2584299b-9988-54e4-b079-31e6c2a819d9
+		summarizeBy: none
+		sourceColumn: is_comp
+
+	column non_comp_reason
+		dataType: string
+		lineageTag: 5533eddc-178e-5ad6-9f94-1c399c111f70
+		summarizeBy: none
+		sourceColumn: non_comp_reason
+
+	partition StoreWeek = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(
+						File.Contents(DataFolder & "\StoreWeek.csv"),
+						[Delimiter = ",", Columns = 7, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"store_id", type text}, {"week_key", Int64.Type}, {"sales_ty", Int64.Type}, {"ly_week_key", Int64.Type}, {"sales_ly_comparable", Int64.Type}, {"is_comp", Int64.Type}, {"non_comp_reason", type text}})
+				in
+					Typed

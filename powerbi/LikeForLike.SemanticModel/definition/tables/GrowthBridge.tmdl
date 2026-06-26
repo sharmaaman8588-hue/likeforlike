@@ -1,0 +1,95 @@
+table GrowthBridge
+	lineageTag: 63610f75-d215-5085-90fc-6f3d24d409b3
+
+	/// Total sales growth, all stores and weeks including the extra week.
+	measure 'Total Growth %' = DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), SUM('GrowthBridge'[sales_ly]))
+		formatString: 0.00%
+		lineageTag: 3de78be4-b0d9-546c-83d3-465056f7a40b
+
+	/// Growth from comparable store-weeks.
+	measure 'Comp pp' = CALCULATE(100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket]))), 'GrowthBridge'[bucket] = "comp")
+		formatString: 0.00
+		lineageTag: d0ec1b06-8f7b-5b3e-a01e-91d016564634
+
+	/// Growth from new stores and ramp.
+	measure 'New Store pp' = CALCULATE(100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket]))), 'GrowthBridge'[bucket] = "new_store")
+		formatString: 0.00
+		lineageTag: 24937868-e568-5354-a45e-cfebcbcb1ee4
+
+	/// Growth lost to closures.
+	measure 'Closed Store pp' = CALCULATE(100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket]))), 'GrowthBridge'[bucket] = "closed_store")
+		formatString: 0.00
+		lineageTag: 1216f982-76cf-52b1-ac47-0fad47464da6
+
+	/// Growth in refurbishment weeks.
+	measure 'Refurbishment pp' = CALCULATE(100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket]))), 'GrowthBridge'[bucket] = "refurbishment")
+		formatString: 0.00
+		lineageTag: 6dfdadb6-b2f5-53e9-b4fe-dfc648406d02
+
+	/// Growth from the 53rd week.
+	measure 'Extra Week pp' = CALCULATE(100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket]))), 'GrowthBridge'[bucket] = "extra_week")
+		formatString: 0.00
+		lineageTag: 3c9de84d-b780-5c8a-a26f-3612e5bc652a
+
+	/// Contribution of the bucket in context to total growth; the waterfall's value.
+	measure 'Bridge pp' = 100 * DIVIDE(SUM('GrowthBridge'[sales_ty]) - SUM('GrowthBridge'[sales_ly]), CALCULATE(SUM('GrowthBridge'[sales_ly]), REMOVEFILTERS('GrowthBridge'[bucket])))
+		formatString: 0.00
+		lineageTag: dab2181b-18f5-5f4d-91a8-4c7d1a1388e6
+
+	column store_id
+		dataType: string
+		lineageTag: 73b59670-1a39-567e-9e7f-e3b5f687415a
+		summarizeBy: none
+		sourceColumn: store_id
+
+	column ty_week_key
+		dataType: int64
+		lineageTag: f7d495b5-a612-5e23-a644-b55b0b010a5b
+		summarizeBy: none
+		sourceColumn: ty_week_key
+
+	column ly_week_key
+		dataType: int64
+		lineageTag: 7ecbd0ba-32fc-53ec-a0e0-1c2fcb3fa27c
+		summarizeBy: none
+		sourceColumn: ly_week_key
+
+	column sales_ty
+		dataType: int64
+		formatString: #,0
+		lineageTag: 43714fca-e944-5133-8de1-ef3ce387c917
+		summarizeBy: sum
+		sourceColumn: sales_ty
+
+	column sales_ly
+		dataType: int64
+		formatString: #,0
+		lineageTag: 5f4d3a47-0a02-585a-a3d1-26843c6cd26f
+		summarizeBy: sum
+		sourceColumn: sales_ly
+
+	column bucket
+		dataType: string
+		lineageTag: f732b5f9-f55f-51f3-a6b3-16e97adf059b
+		summarizeBy: none
+		sourceColumn: bucket
+		sortByColumn: bucket_order
+
+	column bucket_order
+		dataType: int64
+		lineageTag: 8db9bb81-ebaa-53bd-be06-aa8ff0a5fc5a
+		summarizeBy: none
+		sourceColumn: bucket_order
+
+	partition GrowthBridge = m
+		mode: import
+		source =
+				let
+					Source = Csv.Document(
+						File.Contents(DataFolder & "\GrowthBridge.csv"),
+						[Delimiter = ",", Columns = 7, Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+					),
+					Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+					Typed = Table.TransformColumnTypes(Promoted, {{"store_id", type text}, {"ty_week_key", Int64.Type}, {"ly_week_key", Int64.Type}, {"sales_ty", Int64.Type}, {"sales_ly", Int64.Type}, {"bucket", type text}, {"bucket_order", Int64.Type}})
+				in
+					Typed
